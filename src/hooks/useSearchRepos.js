@@ -18,7 +18,11 @@ export const useSearchRepos = (query) => {
     getNextPageParam: (lastPage, allPages) => {
       const currentPage = allPages.length;
 
-      const hasMore = currentPage * 20 < lastPage.total_count;
+      const MAX_RESULTS = 1000;
+
+      const totalResults = Math.min(lastPage.total_count, MAX_RESULTS);
+
+      const hasMore = currentPage * 20 < totalResults;
 
       return hasMore ? currentPage + 1 : undefined;
     },

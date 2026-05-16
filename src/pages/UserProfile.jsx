@@ -10,6 +10,12 @@ import { useStarredRepos } from "../hooks/useStarredRepos";
 
 import { useParams } from "react-router-dom";
 
+import ProfileSkeleton from "../components/skeletons/ProfileSkeleton";
+
+import ErrorMessage from "../components/ui/ErrorMessage";
+
+import EmptyState from "../components/ui/EmptyState";
+
 function UserProfile() {
   const { username } = useParams();
 
@@ -33,11 +39,11 @@ function UserProfile() {
   const starredRepos = starredData?.pages.flatMap((page) => page) || [];
 
   if (isLoading) {
-    return <p className="text-slate-400">Loading profile...</p>;
+    return <ProfileSkeleton />;
   }
 
   if (isError) {
-    return <p className="text-red-400">{error.message}</p>;
+    return <ErrorMessage message={error.message} />;
   }
 
   return (
@@ -160,7 +166,10 @@ function UserProfile() {
         </h2>
 
         {starredRepos.length === 0 && (
-          <p className="text-slate-400">No starred repositories</p>
+          <EmptyState
+            title="No starred repositories"
+            description="This user has not starred any repositories yet."
+          />
         )}
 
         <div

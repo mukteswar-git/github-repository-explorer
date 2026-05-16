@@ -2,17 +2,21 @@ import { Link, useParams } from "react-router-dom";
 
 import { useRepoDetails } from "../hooks/useRepoDetails";
 
+import RepoDetailsSkeleton from "../components/skeletons/RepoDetailsSkeleton";
+
+import ErrorMessage from "../components/ui/ErrorMessage";
+
 function RepoDetails() {
   const { owner, repo } = useParams();
 
   const { data, isLoading, isError, error } = useRepoDetails(owner, repo);
 
   if (isLoading) {
-    return <p className="text-slate-400">Loading repository...</p>;
+    return <RepoDetailsSkeleton />;
   }
 
   if (isError) {
-    return <p className="text-red-400">{error.message}</p>;
+    return <ErrorMessage message={error.message} />;
   }
 
   return (

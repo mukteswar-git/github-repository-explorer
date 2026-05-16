@@ -7,6 +7,10 @@ import RepoCardSkeleton from "../components/skeletons/RepoCardSkeleton";
 
 import { useSearchRepos } from "../hooks/useSearchRepos";
 
+import EmptyState from "../components/ui/EmptyState";
+
+import ErrorMessage from "../components/ui/ErrorMessage";
+
 function Home() {
   const [query, setQuery] = useState("");
 
@@ -25,34 +29,24 @@ function Home() {
 
   const { ref, inView } = useInView({
     threshold: 0,
-  })
+  });
 
   useEffect(() => {
-    if (
-      inView &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
+    if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [
-    inView,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-  ])
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <div>
       <SearchBar value={query} onChange={(e) => setQuery(e.target.value)} />
 
-      {
-        !query && (
-          <div className="py-20 text-center text-slate-500">
-            Search GitHub repositories
-          </div>
-        )
-      }
+      {!query && (
+        <EmptyState
+          title="Search GitHub repositories"
+          description="Find repositories, developers, and open-source projects."
+        />
+      )}
 
       {isLoading && (
         <div className="grid gap-4">
@@ -62,17 +56,14 @@ function Home() {
         </div>
       )}
 
-      {isError && <p className="text-red-400">{error.message}</p>}
+      {isError && <ErrorMessage message={error.message} />}
 
-      {
-        !isLoading &&
-        query &&
-        repositories.length === 0 && (
-          <p className="text-center text-slate-400">
-            No repositories found
-          </p>
-        )
-      }
+      {!isLoading && query && repositories.length === 0 && (
+        <EmptyState
+          title="No repositories found"
+          description="Try another search keyword."
+        />
+      )}
 
       <div className="grid gap-4 md:grid-cols-2">
         {repositories.map((repo) => (
@@ -82,15 +73,11 @@ function Home() {
 
       <div ref={ref} className="py-10 text-center">
         {isFetchingNextPage && (
-          <p className="text-slate-400">
-            Loading more repositories...
-          </p>
+          <p className="text-slate-400">Loading more repositories...</p>
         )}
 
         {!hasNextPage && query && repositories.length > 0 && (
-          <p className="text-slate-500">
-            No more repositories
-          </p>
+          <p className="text-slate-500">No more repositories</p>
         )}
       </div>
     </div>

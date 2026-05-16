@@ -7,10 +7,11 @@ export const useSearchRepos = (query) => {
   return useInfiniteQuery({
     queryKey: queryKeys.repos.search(query),
 
-    queryFn: ({ pageParam }) =>
+    queryFn: ({ pageParam, signal }) =>
       searchRepositories({
         pageParam,
         query,
+        signal
       }),
 
     initialPageParam: 1,

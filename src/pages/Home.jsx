@@ -14,6 +14,8 @@ import ErrorMessage from "../components/ui/ErrorMessage";
 function Home() {
   const [query, setQuery] = useState("");
 
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+
   const {
     data,
     isLoading,
@@ -23,13 +25,23 @@ function Home() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useSearchRepos(query);
+  } = useSearchRepos(debouncedQuery);
 
   const repositories = data?.pages.flatMap((page) => page.items) || [];
 
   const { ref, inView } = useInView({
     threshold: 0,
   });
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [query]);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -40,6 +52,14 @@ function Home() {
   return (
     <div>
       <SearchBar value={query} onChange={(e) => setQuery(e.target.value)} />
+
+      {
+        query !== debouncedQuery && (
+          <p className="mb-4 text-sm text-slate-400">
+            Searching...
+          </p>
+        )
+      }
 
       {!query && (
         <EmptyState
@@ -65,7 +85,7 @@ function Home() {
         />
       )}
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {repositories.map((repo) => (
           <RepoCard key={repo.id} repo={repo} />
         ))}

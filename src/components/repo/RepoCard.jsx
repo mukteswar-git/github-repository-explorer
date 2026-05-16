@@ -1,9 +1,32 @@
 import { Link } from "react-router-dom";
 
+import { useQueryClient } from "@tanstack/react-query";
+
+import { getRepositoryDetails } from "../../api/github";
+
+import { queryKeys } from "../../constants/queryKeys";
+
 function RepoCard({ repo }) {
+  const queryClient = useQueryClient();
+
+  const handlePrefetch = () => {
+    queryClient.prefetchQuery({
+      queryKey: queryKeys.repos.details(repo.owner.login, repo.name),
+
+      queryFn: () =>
+        getRepositoryDetails({
+          owner: repo.owner.login,
+          repo: repo.name,
+        }),
+
+      staleTime: 1000 * 60 * 5,
+    });
+  };
+
   return (
     <Link
       to={`/repos/${repo.owner.login}/${repo.name}`}
+      onMouseEnter={handlePrefetch}
       className="
         block
         rounded-xl

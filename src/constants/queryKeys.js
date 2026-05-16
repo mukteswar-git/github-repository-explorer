@@ -2,7 +2,7 @@ export const queryKeys = {
   repos: {
     all: ["repos"],
 
-    search: (query) => ["repos", "search", query],
+    search: (query, sort) => ["repos", "search", query, sort],
 
     details: (owner, repo) => ["repos", owner, repo],
   },

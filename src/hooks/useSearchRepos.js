@@ -3,15 +3,16 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { searchRepositories } from "../api/github";
 import { queryKeys } from "../constants/queryKeys";
 
-export const useSearchRepos = (query) => {
+export const useSearchRepos = (query, sort) => {
   return useInfiniteQuery({
-    queryKey: queryKeys.repos.search(query),
+    queryKey: queryKeys.repos.search(query, sort),
 
     queryFn: ({ pageParam, signal }) =>
       searchRepositories({
         pageParam,
         query,
-        signal
+        sort,
+        signal,
       }),
 
     initialPageParam: 1,
@@ -30,6 +31,12 @@ export const useSearchRepos = (query) => {
 
     enabled: query.trim().length > 0,
 
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 10,
+
+    gcTime: 1000 * 60 * 30,
+
+    refetchOnWindowFocus: false,
+
+    refetchOnMount: false,
   });
 };

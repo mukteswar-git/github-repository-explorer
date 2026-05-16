@@ -1,12 +1,14 @@
 import githubApi from "./axios";
 
-export const searchRepositories = async ({ pageParam = 1, query, signal }) => {
+export const searchRepositories = async ({ pageParam = 1, query, sort, signal }) => {
   const response = await githubApi.get("/search/repositories", {
+    sort,
+    
     signal,
 
     params: {
       q: query,
-      sort: "stars",
+      sort,
       order: "desc",
       page: pageParam,
       per_page: 20,

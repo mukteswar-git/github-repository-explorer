@@ -6,6 +6,8 @@ import RepoDetails from "../pages/RepoDetails";
 import UserProfile from "../pages/UserProfile";
 import NotFound from "../pages/NotFound";
 
+console.log("RepoDetails rendered");
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -15,16 +17,19 @@ const router = createBrowserRouter([
         index: true,
         element: <Home />,
       },
+
       {
-        path: "/repos/:owner/:repo",
+        path: "repos/:owner/:repo",
         element: <RepoDetails />,
       },
+
       {
-        path: "/users/:username",
+        path: "users/:username",
         element: <UserProfile />,
       },
     ],
   },
+
   {
     path: "*",
     element: <NotFound />,

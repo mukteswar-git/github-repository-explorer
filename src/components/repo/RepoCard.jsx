@@ -6,6 +6,8 @@ import { getRepositoryDetails } from "../../api/github";
 
 import { queryKeys } from "../../constants/queryKeys";
 
+import { saveHomeScroll } from "../../utils/scrollRestoration";
+
 function RepoCard({ repo }) {
   const queryClient = useQueryClient();
 
@@ -27,6 +29,7 @@ function RepoCard({ repo }) {
     <Link
       to={`/repos/${repo.owner.login}/${repo.name}`}
       onMouseEnter={handlePrefetch}
+      onClick={saveHomeScroll}
       className="
         block
         rounded-xl
@@ -34,7 +37,11 @@ function RepoCard({ repo }) {
         border-slate-700
         bg-slate-800
         p-5
-        transition
+        transition-all
+        duration-200
+        hover:-translate-y-1
+        hover:shadow-xl
+        hover:shadow-blue-500/10
         hover:border-blue-500
       "
     >
